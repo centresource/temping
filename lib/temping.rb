@@ -37,7 +37,9 @@ class Temping
       Object.const_set(model_name, @klass)
       create_table
       add_methods
-      @klass.class_eval(&block) if block_given?
+      ev = @klass.class_eval(&block) if block_given?
+      @klass.connection.schema_cache.tables[@klass.table_name] = true
+      ev
     end
 
     private
@@ -69,3 +71,4 @@ class Temping
     end
   end
 end
+
